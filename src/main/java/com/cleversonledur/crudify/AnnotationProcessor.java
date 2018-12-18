@@ -1,4 +1,4 @@
-package com.cleverson.ledur.crudify;
+package com.cleversonledur.crudify;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
@@ -26,7 +26,7 @@ import com.google.auto.service.AutoService;
 import com.sun.org.apache.bcel.internal.classfile.LocalVariable;
 
 @SupportedAnnotationTypes(
-                "com.cleverson.ledur.crudify.Crudify")
+                "Crudify")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
 public class AnnotationProcessor extends AbstractProcessor {

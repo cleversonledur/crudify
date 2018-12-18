@@ -1,4 +1,4 @@
-package com.cleverson.ledur.crudify;
+package com.cleversonledur.crudify;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
