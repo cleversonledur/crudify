@@ -20,3 +20,10 @@ public class MyModelClassController {
 ```
 
 With this annotation, we will generate the endpoints on the Controller class, services and repositories.
+
+## TODO
+
+	- Create repository generator
+	- Create services generator
+	- Create controller generator
+	- Improve documentation	
