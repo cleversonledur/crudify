@@ -34,7 +34,7 @@ With this annotation, we will generate the endpoints on the Controller class, se
  - UPDATE: https://localhost:8080/my-great-model/
  - DELETE: https://localhost:8080/my-great-model/
 
-P.S.: Crudify do not generate security classes. This is up to you to certify your API is secure. We only generate repositories, services and the basic CRUD endpoints.
+P.S.: Crudify does not generate security classes. This is up to you to certify your API is secure. We only generate repositories, services and the basic CRUD endpoints.
 
 ## TODO
 
