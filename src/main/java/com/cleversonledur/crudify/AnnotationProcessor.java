@@ -8,17 +8,14 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
 import java.util.Set;
 
+import com.cleversonledur.crudify.generators.DtoGenerator;
 import com.google.auto.service.AutoService;
 
 @SupportedAnnotationTypes("com.cleversonledur.crudify.Crudify")
@@ -29,6 +26,8 @@ public class AnnotationProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
+    Set<? extends Element> rootE = roundEnv.getRootElements();
+
     for (TypeElement annotation : annotations) {
 
       processingEnv.getMessager()
@@ -36,89 +35,26 @@ public class AnnotationProcessor extends AbstractProcessor {
 
       Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(annotation);
 
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, annotatedElements.toString());
-
-      Set<VariableElement> fields = ElementFilter.fieldsIn(annotatedElements);
-
-      for (VariableElement field : fields) {
-        TypeMirror fieldType = field.asType();
-
-        for (Field field1 : field.getClass().getFields()) {
-
-          processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "CLASS FIELDS" + field1.getName());
-        }
-
-        String fullTypeClassName = fieldType.toString();
-
-        if (!String.class.getName().equals(fullTypeClassName)) {
-          processingEnv.getMessager()
-                          .printMessage(Diagnostic.Kind.WARNING,
-                                          "Field type must be java.lang.String" + fullTypeClassName + " " + fieldType);
-
-          processingEnv.getMessager()
-                          .printMessage(Diagnostic.Kind.WARNING,
-                                          "FIELD DECLARED FIELDS" + fieldType.getClass().getDeclaredFields().toString());
-        }
-      }
-
-      Set<? extends Element> rootE = roundEnv.getRootElements();
-      for (Element e : rootE) {
-        for (Element subElement : e.getEnclosedElements()) {
-          subElement.accept(new CrudifyVisitor(), null); // implement ExampleVisitor
-        }
-      }
-
       annotatedElements.forEach(element -> {
 
-        generateDtos(element);
-        //        generateEndpoints(element);
-        //        generateRepository(element);
-        //        generateService(element);
-
-            });
+        if (element instanceof TypeElement) {
+          DtoGenerator.generateDtos((TypeElement) element, processingEnv);
+          //        generateEndpoints(element);
+          //        generateRepository(element);
+          //        generateService(element);
+        }
+      });
     }
     return true;
   }
 
-  private void generateRepository(Element element) {
+  private void generateRepository(TypeElement element) {
   }
 
-  private void generateService(Element element) {
+  private void generateService(TypeElement element) {
   }
 
-  private void generateDtos(Element element) {
-
-    processingEnv.getMessager()
-                    .printMessage(Diagnostic.Kind.WARNING, "element.getEnclosingElement(): " + element.getEnclosingElement().toString());
-
-    processingEnv.getMessager()
-                    .printMessage(Diagnostic.Kind.WARNING,
-                                    "element.getEnclosingElement().getEnclosedElements(): " + element.getEnclosingElement()
-                                                    .getEnclosedElements()
-                                                    .toString());
-
-    processingEnv.getMessager()
-                    .printMessage(Diagnostic.Kind.WARNING, "element.getEnclosedElements(): " + element.getEnclosedElements().toString());
-
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "element.getKind(): " + element.getKind().toString());
-
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "element.getModifiers(): " + element.getModifiers().toString());
-
-    processingEnv.getMessager()
-                    .printMessage(Diagnostic.Kind.WARNING, "element.getAnnotationMirrors(): " + element.getAnnotationMirrors().toString());
-
-    //    TypeElement field = (TypeElement) element;
-    //
-    //    processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "element.getNestingKind(): " + element.getNestingKind().toString());
-    //
-    //    processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "element.getQualifiedName(): " + element.getQualifiedName().toString());
-    //
-    //    processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "element.getSuperclass(): " + element.getSuperclass().toString());
-
-    processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, "element.getClass(): " + element.getClass().toString());
-  }
-
-  private void generateEndpoints(Element element) {
+  private void generateEndpoints(TypeElement element) {
 
     String className = ((TypeElement) element.getEnclosingElement()).getQualifiedName().toString();
 
