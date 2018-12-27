@@ -1,20 +1,25 @@
-# Crudify - Because life is too short to CRUD
+  # Crudify - Because life is too short to CRUD
 This is a library that provides the @Crudify annotation in order to facilitate the creation of CRUD endpoints based on model classes.
 
-This library is under development. The objective is to be able of generating a whole CRUD API simply by adding an annotation on a Model declaration inside a Controller class.
+This library is under development. The objective is to be able of generating a whole CRUD API simply by adding an annotation on your Model Class.
 
 Example:
 
 ```java
-@Api(value = "MyModelClass CRUD")
-@RestController
-@RequestMapping("/my-model-class")
-public class MyModelClassController {
+@Crudify  //<--- You will just insert this annotation
+@Document(collection = "myGreatModel")
+public class MyGreatModel{
 
-    @Crudify
-    MyModelClass myModelClass;
+    @Id
+    private String id;
 
-    ...
+    private String name;
+
+    private String information;
+
+    //Constructors...
+
+    //Getters/Setters and other methods...
 }
 
 ```
