@@ -1,4 +1,4 @@
-package com.cleversonledur.crudify.generators;
+package com.cleversonledur.crudify.generators.impl;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -9,9 +9,11 @@ import javax.tools.JavaFileObject;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class DtoGenerator {
+import com.cleversonledur.crudify.generators.Generator;
 
-    public static void generateDtos(TypeElement element, ProcessingEnvironment processingEnv) {
+public class DtoGenerator implements Generator {
+
+    public void run(TypeElement element, ProcessingEnvironment processingEnv) {
 
         List<? extends Element> members = processingEnv.getElementUtils().getAllMembers(element);
 
@@ -40,9 +42,9 @@ public class DtoGenerator {
 
         }
 
-    } 
+    }
 
-    static void generateVariableMembers(List<? extends Element> members, PrintWriter out) {
+    private void generateVariableMembers(List<? extends Element> members, PrintWriter out) {
         for (Element member : members) {
             String memberName = member.getSimpleName().toString();
             String memberType = member.asType().toString();
@@ -51,11 +53,11 @@ public class DtoGenerator {
         }
     }
 
-    static void printImportInfo(PrintWriter out) {
+    private void printImportInfo(PrintWriter out) {
         out.println("import java.io.Serializable;");
     }
 
-    static void generateSetters(List<? extends Element> members, PrintWriter out) {
+    private void generateSetters(List<? extends Element> members, PrintWriter out) {
         for (Element member : members) {
             String memberName = member.getSimpleName().toString();
             String memberType = member.asType().toString();
@@ -68,7 +70,7 @@ public class DtoGenerator {
         }
     }
 
-    static void generateGetters(List<? extends Element> members, PrintWriter out) {
+    private void generateGetters(List<? extends Element> members, PrintWriter out) {
         for (Element member : members) {
             String memberName = member.getSimpleName().toString();
             String memberType = member.asType().toString();
@@ -81,15 +83,15 @@ public class DtoGenerator {
         }
     }
 
-    static String firstUpperCase(String memberName) {
+    private String firstUpperCase(String memberName) {
         return memberName.substring(0, 1).toUpperCase() + memberName.substring(1);
     }
 
-    static void printFooterClass(PrintWriter out) {
+    private void printFooterClass(PrintWriter out) {
         out.println("}");
     }
 
-    static void printClassHeader(String className, String builderClassName, PrintWriter out) {
+    private void printClassHeader(String className, String builderClassName, PrintWriter out) {
         int lastDot = className.lastIndexOf('.');
         String builderSimpleClassName = builderClassName.substring(lastDot + 1);
         out.print("public class ");
@@ -98,7 +100,7 @@ public class DtoGenerator {
         out.println();
     }
 
-    static void printPackageInfo(String className, PrintWriter out) {
+    private void printPackageInfo(String className, PrintWriter out) {
         String packageName = null;
         int lastDot = className.lastIndexOf('.');
         if (lastDot > 0) {
