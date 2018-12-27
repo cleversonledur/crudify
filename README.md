@@ -1,34 +1,32 @@
-<<<<<<< Updated upstream
-# Crudify - Because life is too short to CRUD
-=======
-  # Crudify - Because life is too short to CRUD :zap:
+# Crudify - Because life is too short to CRUD :zap:
 
-  ##(Under development)
+##(Under development)
 
->>>>>>> Stashed changes
 This is a library that provides the @Crudify annotation in order to facilitate the creation of CRUD endpoints based on model classes.
 
-This library is under development. The objective is to be able of generating a whole CRUD API simply by adding an annotation on a Model declaration inside a Controller class.
+This library is under development. The objective is to be able of generating a whole CRUD API simply by adding an annotation on your Model Class.
 
 Example:
 
 ```java
-@Api(value = "MyModelClass CRUD")
-@RestController
-@RequestMapping("/my-model-class")
-public class MyModelClassController {
+@Crudify  //<--- You will just insert this annotation
+@Document(collection = "myGreatModel")
+public class MyGreatModel{
 
-    @Crudify
-    MyModelClass myModelClass;
+    @Id
+    private String id;
 
-    ...
+    private String name;
+
+    private String information;
+
+    //Constructors...
+
+    //Getters/Setters and other methods...
 }
 
 ```
 
-<<<<<<< Updated upstream
-With this annotation, we will generate the endpoints on the Controller class, services and repositories.
-=======
 With this annotation, we will generate the endpoints on the Controller class, services and repositories. After building and running the application you will be able to do POST, GET, UPDATE and DELETE requests, for example:
 
  - GET by id: https://localhost:8080/my-great-model/{id}
@@ -37,7 +35,6 @@ With this annotation, we will generate the endpoints on the Controller class, se
  - DELETE: https://localhost:8080/my-great-model/
 
 P.S.: Crudify do not generate security classes. This is up to you to certify your API is secure. We only generate repositories, services and the basic CRUD endpoints.
->>>>>>> Stashed changes
 
 ## TODO
 
