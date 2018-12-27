@@ -8,45 +8,53 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 
-public class CrudifyVisitor implements ElementVisitor<Void, Void> {
+public class CrudifyVisitor implements ElementVisitor<Element, String> {
+
+    private Element element;
+
+    private String elementName;
 
     @Override
-    public Void visit(Element e, Void aVoid) {
+    public Element visit(Element e, String s) {
+        this.element = e;
+        this.elementName = s;
+        System.out.println("STRINGGGGGGGGGGGGG" + s);
         return null;
     }
 
     @Override
-    public Void visit(Element e) {
+    public Element visit(Element e) {
+        this.element = e;
         return null;
     }
 
     @Override
-    public Void visitPackage(PackageElement e, Void aVoid) {
+    public Element visitPackage(PackageElement e, String s) {
         return null;
     }
 
     @Override
-    public Void visitType(TypeElement e, Void aVoid) {
+    public Element visitType(TypeElement e, String s) {
         return null;
     }
 
     @Override
-    public Void visitVariable(VariableElement e, Void aVoid) {
+    public Element visitVariable(VariableElement e, String s) {
         return null;
     }
 
     @Override
-    public Void visitExecutable(ExecutableElement e, Void aVoid) {
+    public Element visitExecutable(ExecutableElement e, String s) {
         return null;
     }
 
     @Override
-    public Void visitTypeParameter(TypeParameterElement e, Void aVoid) {
+    public Element visitTypeParameter(TypeParameterElement e, String s) {
         return null;
     }
 
     @Override
-    public Void visitUnknown(Element e, Void aVoid) {
+    public Element visitUnknown(Element e, String s) {
         return null;
     }
 }
