@@ -24,7 +24,14 @@ public class MyGreatModel{
 
 ```
 
-With this annotation, we will generate the endpoints on the Controller class, services and repositories.
+With this annotation, we will generate the endpoints on the Controller class, services and repositories. After building and running the application you will be able to do POST, GET, UPDATE and DELETE requests, for example:
+
+GET by id: https://localhost:8080/my-great-model/{id}
+POST: https://localhost:8080/my-great-model/
+UPDATE: https://localhost:8080/my-great-model/
+DELETE: https://localhost:8080/my-great-model/
+
+P.S.: Crudify do not generate security classes. This is up to you to certify your API is secure. We only generate repositories, services and the basic CRUD endpoints.
 
 ## TODO
 
