@@ -1,6 +1,6 @@
-# Crudify - Because life is too short to CRUD :zap:
+# :zap: Crudify - Because life is too short to CRUD :zap:
 
-##(Under development)
+## (Under development)
 
 This is a library that provides the @Crudify annotation in order to facilitate the creation of CRUD endpoints based on model classes.
 
