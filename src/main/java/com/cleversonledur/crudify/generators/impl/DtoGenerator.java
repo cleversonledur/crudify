@@ -21,17 +21,22 @@ public class DtoGenerator implements Generator {
 
         String builderClassName = "Crudify" + className + "Dto";
 
+        String fullClassName = element.getQualifiedName().toString();
+
+
         try {
             JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(builderClassName);
 
             try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
 
                 printPackageInfo(className, out);
-                printImportInfo(out);
+                printImportInfo(fullClassName, out);
                 printClassHeader(className, builderClassName, out);
                 generateVariableMembers(members, out);
                 generateGetters(members, out);
                 generateSetters(members, out);
+
+                generateToModel(className, out);
 
                 printFooterClass(out);
 
@@ -44,6 +49,15 @@ public class DtoGenerator implements Generator {
 
     }
 
+    private void generateToModel(String className, PrintWriter out) {
+        out.println("public " + className + " getModel() {");
+
+        out.println("    ModelMapper mapper = new ModelMapper();");
+        out.println("    " + className + " " + className.toLowerCase() + " = mapper.map(this, " + className + ".class);");
+        out.println("    return " + className.toLowerCase() + ";");
+        out.println("}");
+    }
+
     private void generateVariableMembers(List<? extends Element> members, PrintWriter out) {
         for (Element member : members) {
             String memberName = member.getSimpleName().toString();
@@ -53,8 +67,10 @@ public class DtoGenerator implements Generator {
         }
     }
 
-    private void printImportInfo(PrintWriter out) {
+    private void printImportInfo(String fullClassName, PrintWriter out) {
+        out.println("import " + fullClassName + ";");
         out.println("import java.io.Serializable;");
+        out.println("import org.modelmapper.ModelMapper;");
     }
 
     private void generateSetters(List<? extends Element> members, PrintWriter out) {
