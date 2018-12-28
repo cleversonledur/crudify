@@ -12,23 +12,28 @@ import com.cleversonledur.crudify.generators.Generator;
 
 public class ServiceGenerator implements Generator {
 
+    private String className;
+    private String builderClassName;
+    private String fullClassName;
+
+
     @Override
     public void run(TypeElement element, ProcessingEnvironment processingEnv) {
 
         List<? extends Element> members = processingEnv.getElementUtils().getAllMembers(element);
 
-        String className = element.getSimpleName().toString();
-        String builderClassName = "Crudify" + className + "Service";
-        String fullClassName = element.getQualifiedName().toString();
+        className = element.getSimpleName().toString();
+        builderClassName = "Crudify" + className + "Service";
+        fullClassName = element.getQualifiedName().toString();
+
         try {
             JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(builderClassName);
 
             try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
 
-                printPackageInfo(className, out);
-                printImportInfo(className, fullClassName, out);
-                printClassHeader(className, builderClassName, out);
-
+                printPackageInfo(out);
+                printImportInfo(out);
+                printClassHeader(out);
                 printFooterClass(out);
 
             } catch (Exception e) {
@@ -39,7 +44,7 @@ public class ServiceGenerator implements Generator {
         }
     }
 
-    private void printClassHeader(String className, String builderClassName, PrintWriter out) {
+    private void printClassHeader(PrintWriter out) {
         int lastDot = className.lastIndexOf('.');
         String builderSimpleClassName = builderClassName.substring(lastDot + 1);
 
@@ -50,7 +55,7 @@ public class ServiceGenerator implements Generator {
         return memberName.substring(0, 1).toUpperCase() + memberName.substring(1);
     }
 
-    private void printImportInfo(String className, String fullClassName, PrintWriter out) {
+    private void printImportInfo(PrintWriter out) {
 
         out.println("import java.util.Collection;");
         out.println("import java.util.Optional;");
@@ -63,7 +68,7 @@ public class ServiceGenerator implements Generator {
         out.println("}");
     }
 
-    private void printPackageInfo(String className, PrintWriter out) {
+    private void printPackageInfo(PrintWriter out) {
         String packageName = null;
         int lastDot = className.lastIndexOf('.');
         if (lastDot > 0) {
