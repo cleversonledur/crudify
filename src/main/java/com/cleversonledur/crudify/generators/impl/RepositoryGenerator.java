@@ -17,16 +17,15 @@ public class RepositoryGenerator implements Generator {
         List<? extends Element> members = processingEnv.getElementUtils().getAllMembers(element);
 
         String className = element.getSimpleName().toString();
-
         String builderClassName = "Crudify" + className + "Repository";
-
+        String fullClassName = element.getQualifiedName().toString();
         try {
             JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(builderClassName);
 
             try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
 
                 printPackageInfo(className, out);
-                printImportInfo(className, out);
+                printImportInfo(className, fullClassName, out);
                 printClassHeader(className, builderClassName, out);
                 //TODO: Create additional queries for special controllers based on the model annotations.
 
@@ -49,15 +48,26 @@ public class RepositoryGenerator implements Generator {
         int lastDot = className.lastIndexOf('.');
         String builderSimpleClassName = builderClassName.substring(lastDot + 1);
 
-        out.println("public interface " + builderSimpleClassName + "Repository extends MongoRepository<" + builderClassName
+        out.println("public interface " + builderSimpleClassName + " extends MongoRepository<" + className
                         + ", String> {");
     }
 
-    private void printImportInfo(String className, PrintWriter out) {
+    private void printImportInfo(String className, String fullClassName, PrintWriter out) {
         out.println("import org.springframework.data.mongodb.repository.MongoRepository;");
-        out.println("import " + className);
+        out.println("import " + fullClassName + ";");
     }
 
     private void printPackageInfo(String className, PrintWriter out) {
+        String packageName = null;
+        int lastDot = className.lastIndexOf('.');
+        if (lastDot > 0) {
+            packageName = className.substring(0, lastDot);
+        }
+        if (packageName != null) {
+            out.print("package ");
+            out.print(packageName);
+            out.println(";");
+            out.println();
+        }
     }
 }
