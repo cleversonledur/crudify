@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.cleversonledur.crudify.generators.impl.DtoGenerator;
 import com.cleversonledur.crudify.generators.impl.RepositoryGenerator;
+import com.cleversonledur.crudify.generators.impl.ServiceGenerator;
 
 public class GeneratorUtils {
 
@@ -12,7 +13,7 @@ public class GeneratorUtils {
         List<Generator> generators = new ArrayList<>();
         generators.add(new DtoGenerator());
         generators.add(new RepositoryGenerator());
-        //generators.add(new ServiceGenerator());
+        generators.add(new ServiceGenerator());
         //generators.add(new ControllerGenerator());
         return generators;
     }

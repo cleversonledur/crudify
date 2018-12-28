@@ -15,7 +15,7 @@ public class ServiceGenerator implements Generator {
     private String className;
     private String builderClassName;
     private String fullClassName;
-
+    private String variableName;
 
     @Override
     public void run(TypeElement element, ProcessingEnvironment processingEnv) {
@@ -25,6 +25,7 @@ public class ServiceGenerator implements Generator {
         className = element.getSimpleName().toString();
         builderClassName = "Crudify" + className + "Service";
         fullClassName = element.getQualifiedName().toString();
+        variableName = className.toLowerCase();
 
         try {
             JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(builderClassName);
@@ -34,6 +35,11 @@ public class ServiceGenerator implements Generator {
                 printPackageInfo(out);
                 printImportInfo(out);
                 printClassHeader(out);
+
+                printRepository(out);
+                printCreateMethod(out);
+
+
                 printFooterClass(out);
 
             } catch (Exception e) {
@@ -42,6 +48,23 @@ public class ServiceGenerator implements Generator {
         } catch (Exception e) {
 
         }
+    }
+
+    private void printRepository(PrintWriter out) {
+        out.println("@Autowired private Crudify" + className + "Repository repository;");
+
+    }
+
+    private void printCreateMethod(PrintWriter out) {
+        out.println("public " + className + " create" + className + "(Crudify" + className + "Dto " + variableName + "Dto) {");
+
+        out.println("        " + className + " " + variableName + " = " + variableName + "Dto.getModel();");
+
+        out.println("        " + variableName + " = repository.save(" + variableName + ");");
+
+        out.println("        return " + variableName + ";");
+        out.println("}");
+
     }
 
     private void printClassHeader(PrintWriter out) {
@@ -56,6 +79,7 @@ public class ServiceGenerator implements Generator {
     }
 
     private void printImportInfo(PrintWriter out) {
+        out.println("import " + fullClassName + ";");
 
         out.println("import java.util.Collection;");
         out.println("import java.util.Optional;");
@@ -81,4 +105,48 @@ public class ServiceGenerator implements Generator {
             out.println();
         }
     }
+
 }
+
+//    public Pacient createPacient(PacientDto pacientDto) {
+//        Pacient pacient = pacientDto.getModel();
+//
+//        pacient = repository.save(pacient);
+//
+//        return pacient;
+//    }
+//
+//    public void deletePacient(String pacientId) throws Exception {
+//
+//        if (StringUtils.isEmpty(pacientId)) {
+//            throw new Exception("Pacient id was not informed for deletion.");
+//        }
+//
+//        Optional<Pacient> pacient = findPacientById(pacientId);
+//
+//        if (pacient.isPresent()) {
+//            repository.delete(pacient.get());
+//        }
+//
+//    }
+//
+//    public Optional<Pacient> findPacientById(String id) {
+//        return repository.findById(id);
+//    }
+//
+//    public Collection<Pacient> listByName(String name) {
+//        return repository.listByName(name);
+//    }
+//
+//    public Pacient updatePacient(PacientDto pacientDto) throws Exception {
+//
+//        if (StringUtils.isEmpty(pacientDto.getId())) {
+//            throw new Exception("Pacient id was not informed for update: " + pacientDto.toString());
+//        }
+//
+//        Pacient pacient = pacientDto.getModel();
+//
+//        pacient = repository.save(pacient);
+//
+//        return pacient;
+//    }
