@@ -22,10 +22,7 @@ public class ServiceGenerator implements Generator {
 
         List<? extends Element> members = processingEnv.getElementUtils().getAllMembers(element);
 
-        className = element.getSimpleName().toString();
-        builderClassName = "Crudify" + className + "Service";
-        fullClassName = element.getQualifiedName().toString();
-        variableName = className.toLowerCase();
+        loadBasicInfo(element);
 
         try {
             JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(builderClassName);
@@ -38,7 +35,9 @@ public class ServiceGenerator implements Generator {
 
                 printRepository(out);
                 printCreateMethod(out);
-
+                printDeleteMethod(out);
+                printUpdateMethod(out);
+                printFindById(out);
 
                 printFooterClass(out);
 
@@ -50,37 +49,70 @@ public class ServiceGenerator implements Generator {
         }
     }
 
-    private void printRepository(PrintWriter out) {
-        out.println("@Autowired private Crudify" + className + "Repository repository;");
-
+    private void printFindById(PrintWriter out) {
+        out.println("public Optional<" + className + "> find" + className + "ById(String id) {");
+        out.println("        return repository.findById(id);");
+        out.println("}");
     }
 
-    private void printCreateMethod(PrintWriter out) {
-        out.println("public " + className + " create" + className + "(Crudify" + className + "Dto " + variableName + "Dto) {");
+    private void printUpdateMethod(PrintWriter out) {
+        out.println("public " + className + " update" + className + "(Crudify" + className + "Dto " + variableName
+                        + "Dto) throws Exception {");
+
+        out.println("        if (StringUtils.isEmpty(" + variableName + "Dto.getId())) {");
+        out.println("            throw new Exception(\"" + className + " id was not informed for update: \" + " + variableName
+                        + "Dto.toString());");
+        out.println("        }");
 
         out.println("        " + className + " " + variableName + " = " + variableName + "Dto.getModel();");
 
         out.println("        " + variableName + " = repository.save(" + variableName + ");");
 
         out.println("        return " + variableName + ";");
+        out.println("    }");
+
+    }
+
+    private void loadBasicInfo(TypeElement element) {
+        this.className = element.getSimpleName().toString();
+        this.builderClassName = "Crudify" + className + "Service";
+        this.fullClassName = element.getQualifiedName().toString();
+        this.variableName = className.toLowerCase();
+    }
+
+    private void printDeleteMethod(PrintWriter out) {
+        out.println("public void delete" + className + "(String " + variableName + "Id) throws Exception {");
+        out.println("        if (StringUtils.isEmpty(" + variableName + "Id)) {");
+        out.println("            throw new Exception(\" " + className + " id was not informed for deletion. \");");
+        out.println("        }");
+        out.println("        Optional<" + className + "> " + variableName + " = find" + className + "ById(" + variableName + "Id);");
+        out.println("        if (" + variableName + ".isPresent()) {");
+        out.println("            repository.delete(" + variableName + ".get());");
+        out.println("        }");
         out.println("}");
 
+    }
+
+    private void printRepository(PrintWriter out) {
+        out.println("@Autowired private Crudify" + className + "Repository repository;");
+    }
+
+    private void printCreateMethod(PrintWriter out) {
+        out.println("public " + className + " create" + className + "(Crudify" + className + "Dto " + variableName + "Dto) {");
+        out.println("        " + className + " " + variableName + " = " + variableName + "Dto.getModel();");
+        out.println("        " + variableName + " = repository.save(" + variableName + ");");
+        out.println("        return " + variableName + ";");
+        out.println("}");
     }
 
     private void printClassHeader(PrintWriter out) {
         int lastDot = className.lastIndexOf('.');
         String builderSimpleClassName = builderClassName.substring(lastDot + 1);
-
         out.println("@Service public class " + builderSimpleClassName + " {");
-    }
-
-    private String firstUpperCase(String memberName) {
-        return memberName.substring(0, 1).toUpperCase() + memberName.substring(1);
     }
 
     private void printImportInfo(PrintWriter out) {
         out.println("import " + fullClassName + ";");
-
         out.println("import java.util.Collection;");
         out.println("import java.util.Optional;");
         out.println("import org.springframework.beans.factory.annotation.Autowired;");
@@ -108,28 +140,6 @@ public class ServiceGenerator implements Generator {
 
 }
 
-//    public Pacient createPacient(PacientDto pacientDto) {
-//        Pacient pacient = pacientDto.getModel();
-//
-//        pacient = repository.save(pacient);
-//
-//        return pacient;
-//    }
-//
-//    public void deletePacient(String pacientId) throws Exception {
-//
-//        if (StringUtils.isEmpty(pacientId)) {
-//            throw new Exception("Pacient id was not informed for deletion.");
-//        }
-//
-//        Optional<Pacient> pacient = findPacientById(pacientId);
-//
-//        if (pacient.isPresent()) {
-//            repository.delete(pacient.get());
-//        }
-//
-//    }
-//
 //    public Optional<Pacient> findPacientById(String id) {
 //        return repository.findById(id);
 //    }
