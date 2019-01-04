@@ -38,10 +38,8 @@ P.S.: Crudify does not generate security classes. This is up to you to certify y
 
 ## TODO
 
-	- Create repository generator
-	- Create services generator
-	- Create controller generator
 	- Improve documentation
+  - Check bean generation
 
 Do you want to contribute for this project?
 Contact me: cleversonledur at gmail dot com
