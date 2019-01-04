@@ -37,8 +37,7 @@ With this annotation, we will generate the endpoints on the Controller class, se
 P.S.: Crudify does not generate security classes. This is up to you to certify your API is secure. We only generate repositories, services and the basic CRUD endpoints.
 
 ## TODO
-
-	- Improve documentation
+  - Improve documentation
   - Check bean generation
 
 Do you want to contribute for this project?
